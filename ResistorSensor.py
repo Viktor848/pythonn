@@ -9,7 +9,6 @@ for port in serial.tools.list_ports.comports():
     portName = port.name
 
 ard = krastioMag.krastioMag(port = portName)
-ard.all_references(2)
 print(ard.uv(3))
 
 # vout = ard.uv(0)*(5.0/1023.0)
@@ -19,7 +18,7 @@ print(ard.uv(3))
 
 voltage = ard.uv(3)/1000.0
 print(voltage)
-resistance = ((3.3-voltage)*1000)/voltage
-resistance2 = (1000*voltage)/(3.3-voltage)
-print(resistance)
+# resistance = ((3.3-voltage)*1000)/voltage
+resistance2 = ((1000*voltage)/(3.3-voltage))+6
+# print(resistance)
 print(resistance2)

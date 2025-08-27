@@ -6,7 +6,7 @@ import serial.tools.list_ports
 import csv
 import datetime
 import sys
-sys.path.append('C:/krastioMag-main/pythonTools')
+sys.path.append('C:/Users/ltp-l/Desktop/magnet/krastioMag-main/pythonTools')
 import krastioMag  
 
 portName =''
@@ -16,18 +16,24 @@ for port in serial.tools.list_ports.comports():
 
 def animate(i, dataList1, dataList2, ard):
     timestamp = datetime.datetime.now().isoformat(sep=' ', timespec='seconds')
+    #print(ard.uv(0)/1000)
+    arduinoData_string3 = (((ard.uv(0)/1000))-2.5)/0.100
+    print(ard.ur(0))
     arduinoData_string1 = ard.aread(0, 'ampers')
     arduinoData_string2 = ard.aread(1, 'ampers')
     # try:
     arduinoData_float1 = round(float(arduinoData_string1), 2)
     arduinoData_float2 = round(float(arduinoData_string2), 2)
+    print('Sensor 1: ', arduinoData_float1)
+    print('Sensor 2: ', arduinoData_float2)
+    print('Sensor x: ', arduinoData_string3)
     dataList1.append(arduinoData_float1)
     dataList2.append(arduinoData_float2)
 
-    with open("data.csv", "a", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow([timestamp, 'Sensor 1:', arduinoData_float1,'ampers'])
-        writer.writerow([timestamp, 'Sensor 2:', arduinoData_float2,'ampers'])
+    # with open("data.csv", "a", newline="") as csvfile:
+    #     writer = csv.writer(csvfile)
+    #     writer.writerow([timestamp, 'Sensor 1:', arduinoData_float1,'ampers'])
+    #     writer.writerow([timestamp, 'Sensor 2:', arduinoData_float2,'ampers'])
 
     # except:
     #     pass
@@ -43,22 +49,23 @@ def animate(i, dataList1, dataList2, ard):
     #ax.set_ylim([-(arduinoData_float1+0.5), arduinoData_float1+0.5])
     ax.set_ylim([-1, 1])
 
-    ax.set_title("Arduino Data")
+    ax.set_title("Arduino Data") 
     ax.set_ylabel("Value")
 
-    for x in range(len(dataList1)):
-        print('Sensor 1: ', dataList1[x])
-        print('Sensor 2: ', dataList2[x])
+    # for x in range(len(dataList1)):
+    #     print('Sensor 1: ', dataList1[x])
+    #     print('Sensor 2: ', dataList2[x])
                            # Set title of y axis 
 
 dataList1 = []                                           # Create empty list variable for later use
 dataList2 = []
 
 fig = plt.figure()                                      # Create Matplotlib plots fig is the 'higher level' plot window
-
-ax = fig.add_subplot(111)                               # Add subplot to main fig window
+                         # Add subplot to main fig window
 
 ard = krastioMag.krastioMag(port = portName)
+ard.all_references(0)
+ax = fig.add_subplot(111)      
 time.sleep(2)                                           # Time delay for Arduino Serial initialization 
 
                                                         # Matplotlib Animation Fuction that takes takes care of real time plot.
